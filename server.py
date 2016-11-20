@@ -21,10 +21,15 @@ def start():
 		# Суть проблемы:
 		# http://python.su/forum/topic/31377/?page=1#post-170659
 		# УДАЛИТЬ ЭТУ СТРОКУ ПОСЛЕ ФИКСА ПЕРЕДАЧИ ИНФЫ МЕЖДУ КЛИЕНТОМ И СЕРВЕРОМ
-
 		dt = b'22778011885280259212060222157222796759'
-		encrptd = crypt_rsa(dt, pub_key)
-	return Response(encrptd)
+
+		# Если получили число, шифруем его и отправляем обратно
+		if int(dt.decode()):
+			encrptd = crypt_rsa(dt, pub_key)
+			return Response(encrptd)
+		# Усли получили AES, расшифровываем его
+		else:
+			return Response('AES data received')
 
 
 def crypt_rsa(data, key):
