@@ -5,13 +5,13 @@ import requests
 import uuid
 
 from Crypto.Cipher import AES, PKCS1_OAEP
+from Crypto import Random
 from Crypto.PublicKey import RSA
 import rsa
 
-from base64 import b64decode
 
-sec_key = b'-----BEGIN PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: DES-EDE3-CBC,D6D1B2C84B504120\n\nyXgGDMvaMafUdMT+tYor/J8Ps9Fc7deAmfPvR0OhWE4TXWbn2lR+PLtQ7jDVLpTI\n+aoMEmWaO+WSInovzeCgs2kmcvPuiQfYxxUemsWZxfsvl301nQHxfeJGmo+BfXmB\ngu1hbEzheAtDBzxZonmcZPrXxMwxwNCqJMgy2JerBQszUeTwvcvNGprfGMOsYXEW\nTlWFe9FGzBC/udBwAIGLRI3huSd/oivK22Oao8bwtsYqijyOX6p2CDYsnVOAh1Ty\n/rBj5UmBbuyWvkpSjP0WQAcjVutyas15Lapi7iDFveA1Fgn06qpXLw8Ofo1Rrkhp\nZskMusIied4IitNmsuiVt4yM1Jx6OcN5Xc0qr7e0JO055k4BH5q+TqbHWdZOadUw\n8XPh1xNQnuHpJ6hsCpLiefh2eSHEfJ2Eeaj9FU7bNoJYzDsM50oMH4qNcaKYUfaD\no57WC7nqcBSc58KB/FqwEKU4Cja9oTZE3Dx0MQhjlrgPJHga+L0rKZuZBsYzcWDB\n6oRfaRhujz5UY9wio6yfKaB1rnnz+UR/D1e96GYWa+MYAresEkwzVNtQRHCr8sX4\nVLG7kJIKZAANp+n5E3AydWebQ5uiz1mQl3//cNknTmrPhXsbV7166d8P0POQmmuF\nEpCnq7BIzna26zJnqIXgvqAWomtwtrPqU4fPgEzY80jRKjhtX9oVv4buBM50GoBj\nnGzgoGPog05Lx1UZnuzwjSll59D/fvP8QZC5qFOG2mo/dTcSfALR6/3UD1N1UtH6\n9snyKsXsv9uy2eRMCTxfyLMDgAzl/5sc1FzAi+0dl/259XXW7yd+DGidj+3oVjun\nitnkEmVHATy3Gq6oKgzjpsAiAo4OJDameoIB7HOG/+geB2lmUVGtL58Wh37efVJn\n44k+i6fbgi9WCEI0LxqUPmUCCkDFUETtRhghUcr8lWsPRv3MchZ7m0zw34Yrkny8\nGIl/bU2UYHu/neINOvbewyOh1xTm12oq5KKj6rIjyO/rn8ms4FQA7/pmh7dzQuWB\ng8xD3W4D9wVZTSYk0J5LM0tahsIJlc0p3oOJP1ZFqIbwmaDVM4lEtIjKN0dNRf4L\nDZNcpXDpoXGc0zD6RAGLeIiDU0isjxUlACv7dmBW+9jsnxKLBi/aWMEN+VSs+mmZ\nUalH1hZ6j3JU9ZtTPJTvHuQG43hIhA41f4e0dEDdyxc9zHhHfKv9bwZBCYVTOvdU\nVT6Vp309jr+ox6OSMfr3bPwPmc9kS5SXBTkx/+4/W+tgjZ4YfU53wD3h+D8cBKdm\nY5i3umT992wfARO23My2Pwp8BNeH2Nd3++ktM2QjtoLRBexqqrtnRnkg4JvfrMv7\nBGmKgPPIIeyTmGiu7Go/XByUMp3jrHSNu8jRRq06ZINMZ8PpakfT+YcdMd2XBpmi\n1aK43HiXTuW0LRZIMaSjPpEpyFuX7AyH9Lx3IdDBvceXXfppQ4U+3f038U0U+rx4\nsRK9yTsYaunuf47I0dLkKEwBMBv3DsPvzvsG0iWlDE0SPQ6BaUUv12JAeERoEsPt\n+N69IE2Cqc/uZk5wax6y4UB/ZhNLL6Rv0DjgGeW/4Rnd3aA2yVWO3K6tG/sOvBP4\n6r5pN+C10ZahBPcOhbpxttkpygwTW0Jx\n-----END PRIVATE KEY-----'
-pub_key = b'-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7DQBShLA3mUEW3IGVGQ6\nwQhTdrFqK+/v4oFx77GesJf0lO4tyw8HMANO7zq9JEExhWiIaSwV1AccsQ4AKG/b\n9192H5jU7qe3PIAOyfIRYS+BMyUoAfR4yWPMDJ+4dmdvv6wBLAt/EBxEZRCbrJJR\n4TzqyfceXLK+DMZueITxqlfTAy3z9I4JkmqRl439HvKoGMRN2T8QjsCq83FIVqDN\ncJ8AcKOQ/l+HtDueI45BKptrKvs0rQYk7/RibRZUE5rBvGD/DryDdgDqANcsfpC7\n/ZtxB/TS06udMA9PgnS0IXSO5/CnJ/Kw+RiHdg7z8IEWqo4OKzas2zlYr/31aof3\nTQIDAQAB\n-----END PUBLIC KEY-----'
+sec_key = b'-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAtPOtcrcUylmKB5PTB6xQYpEU0Gder9m/dukfRBMhNNdyjUCS\n9k/wKsbOA0YfaT0ZGFBR+lGJWtX9p18HuZwEdhssFcC2T1JeB7CzCU1g1IRBQxKH\noEfzy/pNI3d5PHGCMf+WifwCYDOkERoUAFD5ORyKfcRG2kap8Y8zxOa1OwVLVAKw\nIDcclICBTvsUPO5ICA0c5IyQRjBgvk26Jjp/A+ZNZkS6VAoo+i0oEPVoMJ4FxdZk\nQ1w00luYyL2AxKhRNV3lSJqf7ysUWbUF0O2nOnyqTEkLrTXGGy5dgS5dFWbKD+81\n749Y25pYwBCb4DuNhrinvNg1BizZbBcL/f+hgwIDAQABAoIBAD1HcGuy2JWWMQpT\n41lr32Uh4Lya5RQEV7S7Sd1R5SLx+1cekSZc9+ZkoQu2yZhoGoGDYd+1kSBz64ys\nv/75eQFOPmW3d4XxTOqpylfSHoKZr0g5lDiRZVykjU7/fM0dW4v3FFHySBOwKVWp\nUTCyO1Q9+CCTQbNVzuOBLXT29FTh6lOGb1LFJm9tB15NuO4AJO7RWgTQ7EC/dU+D\n44lwlEvJ4XqXUR/u/3K6j0dkmjHfQwB28hph+eU7h4l44/14ep9bPSn60adY2LJE\n7jvxxMgfwlBXS3sOlf+ikkRqdFupZ1wHrg09OhL3Iuc3Lh00noSokqvuCtefS2IC\nRczFvJECgYEA1jqUKyMhzgzNWPxHV1LJkjlZIIQ6nR96NEYDWKsLN3VtVi1E50Mx\n7I/u26jPJNggnNN8C/sdddHYHIukYQZoEDgNR6t42NEMmK3xqH53QIon0fRS2nAa\nF/g4BSJvMT4iOemFgOSWb1El+QsDHwiDugf0f+9YpapIk1duQrZarj8CgYEA2DwM\nycRxUPgB4kTwsiT7FRh5tAGEe3i0BxA2C2rZrCJp9L+xF50DJurmlsJ9fiq6BqbN\nM0lrtHftS5jW/ZLIdDSLXf9oSCRvLdKANDnBWEt3Wgm8+4eBfvUSJRNe/IZATnpx\nP/qIP+7iZJIf82oVlT1OWSpMPrZp/rBzRIbtw70CgYEAgPmDevULxSGv/4Li8I/H\nC2G7Zvg00aPBzvbXzOotNpZb3SYj9Zde1y1QgK6BB42XFNO+OvhUJDrSAV2Q+VkC\nDcGxPRTfDKnPC5ytgOOiqBiFIMIXn6seCpBGKdExYFQoBvWwiokUiLAyTF1045oc\ntENV0DApDpQWXZ6lo0RmE8ECgYB5oU2QMO+Mm/RzUlQR4LtbImlS14et7DdXwcak\npXXLXZA8G5eBsNAVFAygwMXWMjJxi2Hhd2seGFdiLpbAC9C1jNjYBtKhwdzH6aAz\nwEkBYXHBM7kZwx8USsXqFPtZECsb+cO6OTJqw/SUnZ1bTlDVoaZwgVph7DmzCY3M\n/hjAAQKBgHlRoitEhp70lFtF6eKnbaSvlO5ldO9yOWDcokmfWbK65VA03XzT2BJF\nRrO0aTxofm2OTYNilfb9z5FiOdLi0RJEEiCW63oSgecybuoIj6Oy5i1f13kgLHrg\nrB1SUpAzD34DO30nJ0hSeI8QXxvVxY4D2hOao+3kEOELr0mP8apx\n-----END RSA PRIVATE KEY-----'
+pub_key = b'-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtPOtcrcUylmKB5PTB6xQ\nYpEU0Gder9m/dukfRBMhNNdyjUCS9k/wKsbOA0YfaT0ZGFBR+lGJWtX9p18HuZwE\ndhssFcC2T1JeB7CzCU1g1IRBQxKHoEfzy/pNI3d5PHGCMf+WifwCYDOkERoUAFD5\nORyKfcRG2kap8Y8zxOa1OwVLVAKwIDcclICBTvsUPO5ICA0c5IyQRjBgvk26Jjp/\nA+ZNZkS6VAoo+i0oEPVoMJ4FxdZkQ1w00luYyL2AxKhRNV3lSJqf7ysUWbUF0O2n\nOnyqTEkLrTXGGy5dgS5dFWbKD+81749Y25pYwBCb4DuNhrinvNg1BizZbBcL/f+h\ngwIDAQAB\n-----END PUBLIC KEY-----'
 
 
 def rand_num():
@@ -32,6 +32,8 @@ def crypt_rsa(data, key):
 data = rand_num()
 encrptd = crypt_rsa(data, pub_key)
 
+# Суть проблемы:
+# http://python.su/forum/topic/31377/?page=1#post-170659
 # УДАЛИТЬ ЭТУ СТРОКУ ПРОСТО ФИКСА ПЕРЕДАЧИ ИНФЫ МЕЖДУ КЛИЕНТОМ И СЕРВЕРОМ
 data = b'22778011885280259212060222157222796759'
 
@@ -46,17 +48,7 @@ print('Answer: ', answr)
 
 def decrypt_rsa(data, key):
 	''' дешифрует RSA данные data ключем key '''
-	key = key.decode()
-	key = key.replace('\n-----END PRIVATE KEY-----', '').replace('-----BEGIN PRIVATE KEY-----\n', '')
-	key = key.encode()
-	print('KEY IS HERE: ', key)
-
-	key = b64decode(key)
-
-	print('KEY 2 IS HERE: ', key)
-
 	key = RSA.importKey(key)
-	
 	cipher = PKCS1_OAEP.new(key)
 	decrypted = cipher.decrypt(data)
 	return decrypted
@@ -66,20 +58,30 @@ decrptd = decrypt_rsa(answr, sec_key)
 print('Decrypted with RSA: ', decrptd)
 
 
+# А теперь шифрование AES
+def send_aes():
+	key = b'Sixteen byte key'
+	iv = Random.new().read(AES.block_size)
+	cipher = AES.new(key, AES.MODE_CFB, iv)
+	msg = iv + cipher.encrypt(b'Attack at dawn')
+	r = requests.post("http://127.0.0.1:5000", data=msg)
+	print('Message encrypted by AES: ', msg)
+
+
 # Проверяем совпадают ли данные
 if data == decrptd:
 	print("CORRECT !!! YES !!! WE DID IT !!!")
+	send_aes()
 else:
 	print("NOT CORRECT !!!")
+
 
 
 # PUBKEY_TEMPLATE = "-----BEGIN PUBLIC KEY-----\n{}\n-----END PUBLIC KEY-----"
 
 # def generate_keys():
 # 	''' генерирует RSA ключи '''
-# 	secret_code = "Unguessable"
-# 	key = RSA.generate(2048)
-# 	encrypted_key = key.exportKey(passphrase=secret_code, pkcs=8)
-# 	public_key = key.publickey().exportKey()
-# 	keys = [encrypted_key, public_key]
-# 	return keys
+# 	k = RSA.generate(2048)
+# 	sk = k.exportKey() #PrivateKey
+# 	pk = k.publickey().exportKey() #PublicKey
+# 	return [sk, pk]
