@@ -30,7 +30,7 @@ def start():
 		# Усли получили AES, расшифровываем его
 		else:
 			return Response('AES data received')
-
+	return Response('Get Request')
 
 def crypt_rsa(data, key):
 	''' шифрует RSA данные data ключем key '''
