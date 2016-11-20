@@ -46,7 +46,9 @@ print('Answer: ', answr)
 
 def decrypt_rsa(data, key):
 	''' дешифрует RSA данные data ключем key '''
-
+	key = key.decode()
+	key = key.replace('\n-----END PRIVATE KEY-----', '').replace('-----BEGIN PRIVATE KEY-----\n', '')
+	key = key.encode()
 	print('KEY IS HERE: ', key)
 
 	key = b64decode(key)
