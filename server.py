@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, Response, request 
-
 from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
+import base64
 
 app = Flask(__name__)
 
@@ -16,21 +16,19 @@ pub_key = b'-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
 def start():
 	if request.method == 'POST':
 		dt = request.data
-		print('Recieved from client: ', dt)
-
-		# Суть проблемы:
-		# http://python.su/forum/topic/31377/?page=1#post-170659
-		# УДАЛИТЬ ЭТУ СТРОКУ ПОСЛЕ ФИКСА ПЕРЕДАЧИ ИНФЫ МЕЖДУ КЛИЕНТОМ И СЕРВЕРОМ
-		dt = b'22778011885280259212060222157222796759'
+		dt = base64.b64decode(dt)
 
 		# Если получили число, шифруем его и отправляем обратно
-		if int(dt.decode()):
+		if dt.isdigit():
+			print('Recieved RSA from client: ', dt)
 			encrptd = crypt_rsa(dt, pub_key)
 			return Response(encrptd)
 		# Усли получили AES, расшифровываем его
 		else:
+			print('Recieved AES from client: ', dt)
 			return Response('AES data received')
 	return Response('Get Request')
+
 
 def crypt_rsa(data, key):
 	''' шифрует RSA данные data ключем key '''

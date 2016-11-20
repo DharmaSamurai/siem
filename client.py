@@ -3,6 +3,7 @@
 
 import requests
 import uuid
+import base64
 
 from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto import Random
@@ -27,17 +28,11 @@ def crypt_rsa(data, key):
 	return cipher.encrypt(data)
 
 
-# TEST
 data = rand_num()
 encrptd = crypt_rsa(data, pub_key)
 
-# Суть проблемы:
-# http://python.su/forum/topic/31377/?page=1#post-170659
-# УДАЛИТЬ ЭТУ СТРОКУ ПОСЛЕ ФИКСА ПЕРЕДАЧИ ИНФЫ МЕЖДУ КЛИЕНТОМ И СЕРВЕРОМ
-data = b'22778011885280259212060222157222796759'
-
 # Sending message
-r = requests.post("http://127.0.0.1:5000", data=data)
+r = requests.post("http://127.0.0.1:5000", data=base64.b64encode(data).decode())
 answr = r.content
 
 
@@ -59,7 +54,7 @@ def send_aes():
 	iv = Random.new().read(AES.block_size)
 	cipher = AES.new(key, AES.MODE_CFB, iv)
 	msg = iv + cipher.encrypt(b'Attack at dawn')
-	r = requests.post("http://127.0.0.1:5000", data=msg)
+	r = requests.post("http://127.0.0.1:5000", data=base64.b64encode(msg).decode())
 	print('Message encrypted by AES: ', msg)
 
 
